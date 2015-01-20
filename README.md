@@ -6,6 +6,12 @@ Plugin supports caching:
 * It caches template files and re-render only changed files.
 * It caches partials and re-render all templates, when some partial is changed.
 
+##Install
+
+```
+npm install broccoli-render-handlebars
+```
+
 ##Usage
 
 ```
@@ -82,4 +88,3 @@ Handlebars instance with already registered helpers and partials.
 #License
 
 Public domain, see the `LICENCE.md` file.
-

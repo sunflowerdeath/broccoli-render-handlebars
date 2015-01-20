@@ -1,7 +1,6 @@
 var assert = require('assert')
 var fs = require('fs-extra')
 var path = require('path')
-var _ = require('underscore')
 var broccoli = require('broccoli')
 var sinon = require('sinon')
 
@@ -23,6 +22,7 @@ describe('broccoli render handlebars', function() {
 
 	var SIMPLE_DIR = path.join(DIR, 'simple')
 	var PARTIALS_DIR = path.join(DIR, 'partials')
+	var HELPERS_DIR = path.join(DIR, 'helpers')
 
 	it('renders templates', function() {
 		var tree = renderHandlebars(SIMPLE_DIR, {
@@ -84,15 +84,63 @@ describe('broccoli render handlebars', function() {
 			.then(function() { assert.equal(spy.callCount, 4) })
 	})
 
-	it('makePartialName', function() {
+	it('calls "makePartialName"', function() {
+		var makePartialName = sinon.spy(function() { return 'partial' })
+		var tree = renderHandlebars(PARTIALS_DIR, {
+			files: ['template1.hbs', 'template2.hbs'],
+			partials: ['partial2.hbs'],
+			context: {test: 'test'},
+			makePartialName: makePartialName
+		})
+		builder = new broccoli.Builder(tree)
+		return builder.build().then(function(result) {
+			var dir = result.directory
+			var file = fs.readFileSync(path.join(dir, 'template1.html'), 'utf8')
+			assert.equal(file, 'test\n1\n')
+			assert.deepEqual(makePartialName.firstCall.args, ['partial2.hbs'])
+		})
 	})
 
-	it('helpers', function() {
+	it('uses helpers', function() {
+		var tree = renderHandlebars(HELPERS_DIR, {
+			context: {test: 'test'},
+			helpers: {
+				helper: function(options) {
+					return 'helper ' + options.fn(this)
+				}
+			}
+		})
+		builder = new broccoli.Builder(tree)
+		return builder.build().then(function(result) {
+			var dir = result.directory
+			var file = fs.readFileSync(path.join(dir, 'template.html'), 'utf8')
+			assert.equal(file, 'helper test\n')
+		})
 	})
 
-	it('context', function() {
+	it('makes context from function', function() {
+		var ctxFn = sinon.spy(function() { return {test: 'test'} })
+		var tree = renderHandlebars(SIMPLE_DIR, {
+			context: ctxFn
+		})
+		builder = new broccoli.Builder(tree)
+		return builder.build().then(function() {
+			assert(ctxFn.firstCall.args, ['template1.hbs'])
+		})
 	})
 
 	it('changeFileName', function() {
+		var tree = renderHandlebars(SIMPLE_DIR, {
+			context: {test: 'test'},
+			changeFileName: function(file) {
+				return file + '.html'
+			}
+		})
+		builder = new broccoli.Builder(tree)
+		return builder.build().then(function(result) {
+			var dir = result.directory
+			var file = fs.readFileSync(path.join(dir, 'template1.hbs.html'), 'utf8')
+			assert.equal(file, 'test1\n')
+		})
 	})
 })

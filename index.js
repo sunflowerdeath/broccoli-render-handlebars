@@ -25,7 +25,7 @@ var Tree = function(inputTree, options) {
 	if (options.makePartialName === undefined) options.makePartialName = makePartialName
 
 	this.handlebars = options.handlebars || handlebars.create()
-	if (options.helpers) this.handlebars.registerHelpers(options.helpers)
+	if (options.helpers) this.handlebars.registerHelper(options.helpers)
 
   Filter.apply(this, arguments)
 }
