@@ -1,4 +1,4 @@
-#broccoli-render-handlebars
+# broccoli-render-handlebars
 
 Broccoli plugin that renders handlebars templates.
 
@@ -6,13 +6,13 @@ Plugin supports caching:
 * It caches template files and re-render only changed files.
 * It caches partials and re-render all templates, when some partial is changed.
 
-##Install
+## Install
 
 ```
 npm install broccoli-render-handlebars
 ```
 
-##Usage
+## Usage
 
 ```
 var renderHandlebars = require('broccoli-render-handlebars')
@@ -24,20 +24,20 @@ var tree = renderHandlebars('inputDir', {
 })
 ```
 
-##renderHandlebars(inputTree, options)
+## renderHandlebars(inputTree, options)
 
-###inputTree
+### inputTree
 
 Broccoli input tree
 
-###options
+### options
 
 Object with options
 
 
-##List of options
+## List of options
 
-###files
+### files
 
 Type: `array.<string>`
 <br>
@@ -45,13 +45,13 @@ Default: `['**/*.hbs', '**/*.handlebars']`
 
 List of files or glob patterns of templates to render.
 
-###partials
+### partials
 
 Type: `array.<string>`
 
 List of files or glob patterns of partial templates.
 
-###makePartialName
+### makePartialName
 
 Type: `function(string) -> string`
 <br>
@@ -59,19 +59,19 @@ Default: Path with removed `.hbs` or `.handlebars` extension.
 
 Function that takes path of partial and returns name.
 
-###helpers
+### helpers
 
 Type: `object`
 
 Handlebars helpers.
 
-###context 
+### context 
 
 Type: `object|function(string) -> object`
 
 Handlebars render context or function that takes path of template and returns context.
 
-###changeFileName 
+### changeFileName 
 
 Type: `function(string) -> string`
 <br>
@@ -79,12 +79,12 @@ Default: Path with `.hbs` or `.handlebars` extension changed to `.html`.
 
 Function that takes path of template and returns name of rendered file.
 
-###handlebars
+### handlebars
 
 Type: `object`
 
 Handlebars instance with already registered helpers and partials.
 
-#License
+## License
 
 Public domain, see the `LICENCE.md` file.
