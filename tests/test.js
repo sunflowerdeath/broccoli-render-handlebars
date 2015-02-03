@@ -129,7 +129,21 @@ describe('broccoli render handlebars', function() {
 		})
 	})
 
-	it('changeFileName', function() {
+	it('does not caches when context is function', function() {
+		var ctxFn = sinon.spy(function() { return {test: 'test'} })
+		var tree = renderHandlebars(SIMPLE_DIR, {
+			context: ctxFn
+		})
+		var spy = sinon.spy(tree, 'processFileContent')
+		builder = new broccoli.Builder(tree)
+		return builder.build()
+			.then(function() { assert.equal(spy.callCount, 2) })
+			.then(builder.build.bind(builder))
+			.then(function() { assert.equal(spy.callCount, 4) })
+	})
+
+
+	it('uses "changeFileName"', function() {
 		var tree = renderHandlebars(SIMPLE_DIR, {
 			context: {test: 'test'},
 			changeFileName: function(file) {

@@ -36,6 +36,8 @@ Tree.prototype.description = 'Handlebars'
 Tree.prototype.read = function(readTree) {
 	var _this = this
 	return readTree(this.inputTree).then(function(srcDir) {
+		// Don't cache when context is dynamic
+		if (typeof _this.options.context === 'function') _this.invalidateCache()
 		_this.cachePartials(srcDir)
 		return Filter.prototype.read.call(_this, readTree)
 	})
